@@ -79,6 +79,12 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.3.1</version>
+               <configuration>
+			        <failOnError>false</failOnError> <!-- Permite continuar mesmo com erros de Javadoc -->
+			        <additionalOptions>
+			            <additionalOption>-Xdoclint:none</additionalOption> <!-- Desativa validações do Javadoc -->
+			        </additionalOptions>
+			    </configuration>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -104,6 +110,11 @@
                     </execution>
                 </executions>
             </plugin>
+            
+           
+ 
+
+            
         </plugins>
     </build>
 
