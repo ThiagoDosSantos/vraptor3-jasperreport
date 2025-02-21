@@ -1,8 +1,7 @@
 package br.com.caelum.vraptor.jasperreports.util;
 
-import com.lowagie.text.pdf.codec.Base64;
+import java.util.Base64;
 
-import net.sf.jasperreports.engine.JRExporterParameter;
 import br.com.caelum.vraptor.ioc.Component;
 import br.com.caelum.vraptor.jasperreports.Report;
 import br.com.caelum.vraptor.jasperreports.ReportFormatResolver;
@@ -31,7 +30,7 @@ public class DefaultReportDataURIBuilder implements ReportDataURIBuilder {
 		StringBuilder URI = new StringBuilder("data:");
 		URI.append(format.getContentType());
 		URI.append(";charset=").append(charset);
-		URI.append(";base64,").append(Base64.encodeBytes(content));
+		URI.append(";base64,").append(Base64.getEncoder().encodeToString(content));
 		return URI.toString();
 	}
 
@@ -39,8 +38,13 @@ public class DefaultReportDataURIBuilder implements ReportDataURIBuilder {
 		return build(report, resolver.getExportFormat());
 	}
 
-	private String extractCharset(ExportFormat format) {
-		return (String) format.getParameters().get(JRExporterParameter.CHARACTER_ENCODING);
-	}
+	/**
+     * Define um charset padrão UTF-8 para os relatórios exportados.
+     */
+    private String extractCharset(ExportFormat format) {
+        // JasperReports 6.21.4 não usa mais JRExporterParameter
+        // Portanto, assumimos UTF-8 como padrão
+        return "UTF-8";
+    }
 
 }
