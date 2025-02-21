@@ -1,17 +1,17 @@
 package br.com.caelum.vraptor.jasperreports.formats;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+
+import com.google.common.collect.Maps;
+import com.google.common.io.Flushables;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporter;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperPrint;
-
-import com.google.common.collect.Maps;
-import com.google.common.io.Closeables;
-import com.google.common.io.Flushables;
 
 public abstract class AbstractExporter implements ExportFormat {
 	
@@ -41,10 +41,8 @@ public abstract class AbstractExporter implements ExportFormat {
 	}
 	
 	public byte[] toByteArray(List<JasperPrint> print) {
-		
-		ByteArrayOutputStream output = new ByteArrayOutputStream();
-	
-		try {
+			
+		try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
 			
 			JRExporter exporter = setup();
 			exporter.setParameters(getParameters());
@@ -61,9 +59,10 @@ public abstract class AbstractExporter implements ExportFormat {
 			
 		} catch (JRException e) {
 			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
-		finally {
-			Closeables.closeQuietly(output);
+		finally {			
 			parameters.clear();
 		}
 	}
